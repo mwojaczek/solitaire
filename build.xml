@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="IJA-projekt" default="compile" basedir=".">
+
+  <!-- nastaveni cest k jednotlivym adresarum -->
+    <property name="srcdir" location="./src" />
+    <property name="build" location="./build" />
+    <property name="deploydir" location="./dest-client" />
+    <property name="jarname" value="solitare.jar" />
+    <property name="mainclass" value="ija.ija2016.proj.Main" />
+    <property name="doc"     value="./doc"/>
+    <property name="lib.dir" value="./lib"/>
+   
+    <target name="clean">
+        <delete dir="${build}"/>
+        <delete dir="${deploydir}"/>
+        <delete dir="${doc}"/>
+    </target>
+
+  <!-- jednoduchy compile -->
+    <target name="compile" depends="clean">
+    
+    <!-- spusteni scriptu pro stazeni knihovny -->
+    <!--
+    <exec executable="/bin/bash">
+    <arg value="${lib.dir}/get-libs.sh"/>
+    </exec>
+    -->
+    <!-- vytvoreni adresare build -->
+        <mkdir dir="${build}"/>
+        <javac includeantruntime="false" srcdir="${srcdir}" destdir="${build}"/>
+        
+        <!-- vytvoreni slozky a build clienta -->
+        <jar destfile="${deploydir}/${jarname}">
+            <fileset dir="${build}"/>
+
+            <fileset dir="${srcdir}">
+              <include name="**/*.png" />
+            </fileset>
+
+            <manifest>
+                <attribute name="Main-Class" value="${mainclass}"/> <!-- cesta k hlavni tride clienta -->
+            </manifest>
+        </jar>
+    <!-- konec buildu clienta -->
+
+    <!-- vytvoreni dokumentace z komentaru -->
+    <javadoc sourcepath="${srcdir}" destdir="${doc}"/>
+
+  <!-- konec buildu --> 
+    </target>
+   
+  <!-- pojdme spustit clienta -->
+  <target name="run" depends="compile">
+        <java jar="${deploydir}/${jarname}" fork="true"/>
+    <!-- konec spousteni clienta -->
+  </target>
+  
+  
+</project>
+
+
